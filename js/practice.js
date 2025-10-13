@@ -21,6 +21,19 @@ const practice_intro = {
   
 };
 
+function uploadData(filename, csvData) {
+        fetch("/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename: filename, data: csvData })
+        })
+        .then(response => response.text())
+        .then(result => {
+          console.log("Upload success:", result);
+        })
+        .catch(err => console.error("Upload error:", err));
+      } 
+
 // 練習フェーズの作成
 function createPractice(jsPsych) {
   if (!document.getElementById('practice-global-style')) {
@@ -614,4 +627,5 @@ const downloadQuizResultTrial = {
       waitTrial
     ],  
   };
+
 }
