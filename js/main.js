@@ -20,9 +20,6 @@ function uploadData(filename, csvData) {
           body: JSON.stringify({ filename: filename, data: csvData })
         })
         .then(response => response.text())
-        .then(result => {
-          console.log("Upload success:", result);
-        })
         .catch(err => console.error("Upload error:", err));
       } 
 
@@ -38,4 +35,5 @@ timeline.push(outro);
 
 // 実行
 jsPsych.run(timeline);
+
 
