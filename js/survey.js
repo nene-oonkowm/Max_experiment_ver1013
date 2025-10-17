@@ -101,9 +101,7 @@ function createSurvey(jsPsych) {
       },
       on_finish: function(data){
         let remain = cards.map((c, i) => c.available ? i : null).filter(i => i !== null);
-        console.log("remain:", remain);
         let chosenIndex = remain[data.response];
-        
         cards[chosenIndex].revealed = true;
         jsPsych.data.write({chosen: chosenIndex});
 
@@ -122,9 +120,7 @@ function createSurvey(jsPsych) {
         let chosenIndex = data.response;
         cards[chosenIndex].revealed = true;
         jsPsych.data.write({chosen: chosenIndex});
-        console.log("Chosen index:", chosenIndex, "Card:", cards[chosenIndex]); // デバッグ用
         const availableLabels = cards.filter(c => c.available).map(c => c.label);
-        console.log("利用可能な選択肢:", availableLabels);
 
         // 残っているカードの枚数をカウント
         const remainingCards = cards.filter(c => c.available).length;
@@ -132,7 +128,6 @@ function createSurvey(jsPsych) {
         const agentCount = Math.max(remainingCards - 1, 0);
         // agentAlive配列を更新（trueがagentCount個、残りはfalse）
         agentAlive = Array(agentCount).fill(true);
-        console.log("エージェント数を更新:", agentCount, agentAlive);
       }
     };
   }
@@ -203,8 +198,6 @@ function createSurvey(jsPsych) {
         data.chosen_value = cards[data.chosen].value;
       }
       data.phase = "decision";
-      console.log("Decision:", data.decision, "Raw response:", data.response);
-      console.log(jsPsych.data.get().last(1).values()[0]);  
     } 
   };
 
@@ -264,10 +257,6 @@ function agentDecisions() {
     type: jsPsychHtmlButtonResponse,
     stimulus: function(){
       var last_decision_data = jsPsych.data.get().filter({phase: "decision"}).last(1).values();
-      if (last_decision_data.length < 1 || typeof last_decision_data[0].chosen === "undefined") {
-        console.error("last_decision_dataが不正です", last_decision_data);
-        return "<p>選択データが不足しています。やり直してください。</p>";
-      }
       var last_choice = last_decision_data[0].chosen;
       var last_decision = last_decision_data[0].decision;
     
@@ -275,17 +264,12 @@ function agentDecisions() {
       let agents = agentDecisions();
       // 意思決定したエージェント一覧
       let agentWinners = agents.filter(c => c.decision === 1);
-      console.log("Agent decisions:", agents);
-      console.log("Agent winners:", agentWinners);
       // 参加者と同じカードを選び意思決定したエージェントのみをagentCompetitorとして抽出
       let agentCompetitor = agents.filter(c => c.choice === last_choice && c.decision === 1);
-      console.log("Agent competitors:", agentCompetitor);
-
       // エージェントが獲得した場合、そのエージェントは減る
       agentWinners.forEach(c => { 
         agentAlive[c.agent] = false;
         cards[c.choice].available = false;
-        console.log(`エージェント${c.agent + 1} が ${cards[c.choice].label}（${cards[c.choice].value}円）を獲得しました`); 
       });
     
 
@@ -342,7 +326,6 @@ function agentDecisions() {
       data.I = cards[8].available ? cards[8].value : "unavailable";
       data.J = cards[9].available ? cards[9].value : "unavailable";
       data.category = "SurveyData";
-      console.log("SurveyData saved:", jsPsych.data.get().last(1).values()[0]); // デバッグ用
     },
     choices: ["次へ"], 
     button_html: '<button class="jspsych-btn">%choice%</button>',
@@ -352,7 +335,7 @@ function agentDecisions() {
     timeline: [ 
       getChoiceTrial(), 
       decisionTrial,
-      //waitTrial,   開発用
+      waitTrial,
       resultTrial
     ],
     loop_function: function(data){
@@ -437,7 +420,6 @@ function agentDecisions() {
           data.I = cards[8].available ? cards[8].value : "unavailable";
           data.J = cards[9].available ? cards[9].value : "unavailable";
           data.category = "SurveyData";
-          console.log("SurveyData saved:", jsPsych.data.get().last(1).values()[0]); // デバッグ用
         },
         choices: ["次へ"]
     };
@@ -508,7 +490,6 @@ function agentDecisions() {
           // 直前のchoiceLoopで「おめでとうございます！」が出ていれば（カード獲得済みなら）autoSelectTrialをスキップ
           const lastResult = jsPsych.data.get().last(1).values()[0];
           const surveydata = jsPsych.data.get().filter({category: "SurveyData"}).values();
-          console.log("Survey Data ALL:", surveydata); // デバッグ用
           if (lastResult && lastResult.stimulus && lastResult.stimulus.includes("おめでとうございます！")) {
             return false; // スキップ
           }
@@ -526,5 +507,6 @@ function agentDecisions() {
     ]
   };
 };
+
 
 
