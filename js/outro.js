@@ -5,7 +5,6 @@ const rewardExplanationTrial = {
       stimulus: function() {
         // survey.jsと同様に、最後に獲得したカードの価値を取得
         const lastCardData = jsPsych.data.get().filter({phase: "decision"}).last(1).values()[0];
-        console.log("Last card data:", lastCardData); // デバッグ用
         let value = lastCardData.chosen_value;
         let html = "<h3>報酬のご案内</h3>";
         if (value < 300) {
@@ -215,5 +214,6 @@ var outro = {
     
   ],
 };  // outro.jsのtimelineに追加
+
 
 
