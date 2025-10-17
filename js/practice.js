@@ -86,7 +86,6 @@ function createPractice(jsPsych) {
         .filter(label => label !== null),
       on_finish: function(data){
         let remain = cards.map((c, i) => c.available ? i : null).filter(i => i !== null);
-        console.log("remain:", remain);
         let chosenIndex = remain[data.response];
         cards[chosenIndex].revealed = true;
         jsPsych.data.write({chosen: chosenIndex});
@@ -615,4 +614,5 @@ const downloadQuizResultTrial = {
     ],  
   };
 }
+
 
