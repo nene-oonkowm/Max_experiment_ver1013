@@ -93,7 +93,6 @@ function createPractice(jsPsych) {
       },
       button_html: '<button class="choice-card">%choice%</button>',
       on_load: function() {
-        console.log(jsPsych.data.get().values());
         const btns = document.querySelectorAll('.choice-card');
         btns.forEach((btn, i) => {
           if (!cards[i].available) {
@@ -183,7 +182,6 @@ function createPractice(jsPsych) {
           }
           cards[remain[0]].available = false;
           cards[remain[1]].available = false;
-          console.log("消失したカード:", cards[remain[0]].label, cards[remain[1]].label);
 
         }
         const trials = jsPsych.data.get().filter({chosen: true}).values();
@@ -211,14 +209,12 @@ function createPractice(jsPsych) {
       on_finish: function(data){
         let remain = cards.map((c, i) => c.available ? i : null).filter(i => i !== null);
         let chosenIndex = data.response;
-        console.log("remain:", remain);
         cards[chosenIndex].available = false;
         cards[chosenIndex].revealed = true;
         jsPsych.data.write({chosen: chosenIndex});
       },
       button_html: '<button class="choice-card">%choice%</button>',
       on_load: function() {
-        console.log(jsPsych.data.get().values());
         const btns = document.querySelectorAll('.choice-card');
         btns.forEach((btn, i) => {
           if (!cards[i].available) {
@@ -614,5 +610,6 @@ const downloadQuizResultTrial = {
     ],  
   };
 }
+
 
 
