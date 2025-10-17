@@ -43,7 +43,6 @@ const intro3_id = {
   on_finish: function(data){
     // 入力されたIDをグローバル変数やwindowオブジェクトに保存
     window.id = data.response.ID;
-    console.log("Participant ID:", window.id); // デバッグ用
   }
 };
 
@@ -167,3 +166,4 @@ const intro4 = {
   // ※キーボードの左右矢印でも進めます
 
 }
+
